@@ -63,12 +63,7 @@ Real iOS **local notifications** fire a day before every renewal and trial end �
 3. Select the **Renewly** target → **Signing & Capabilities** → choose your Apple ID team.
 4. Pick an iPhone simulator (or your iPhone) and press **▶ Run**.
 
-**App icon** — decode the staged icon once:
-```bash
-base64 -d -i AppIcon-1024.png.base64.txt \
-  -o Renewly/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png
-```
-Then add it to `AppIcon.appiconset/Contents.json` as a `1024x1024` universal image (snippet in the old README history). Xcode generates all sizes automatically.
+**App icon** — no Terminal needed. Double-click **`Install-Icon.html`** in this folder, click **Download AppIcon-1024.png**, then drag that PNG onto the **AppIcon** well in `Assets.xcassets` (or into `Renewly/Assets.xcassets/AppIcon.appiconset/` in Finder). Rebuild — the warnings disappear and the new icon appears on the home screen.
 
 **iCloud sync (optional)** — Xcode → target → *Signing & Capabilities* → **+ Capability** → **iCloud** → tick **CloudKit** with container `iCloud.com.renewly.app`. Without it, the app simply works locally.
 

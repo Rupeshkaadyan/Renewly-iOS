@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Install Renewly App Icon</title>
+<style>
+  body { font-family: -apple-system, sans-serif; background: #0b0614; color: #f4f0ff;
+         display: flex; flex-direction: column; align-items: center;
+         padding: 48px 20px; margin: 0; }
+  h1 { font-size: 26px; margin: 0 0 6px; }
+  p.sub { opacity: .65; margin: 0 0 24px; text-align: center; }
+  svg.preview { width: 220px; height: 220px; border-radius: 48px;
+                box-shadow: 0 18px 60px rgba(168,85,247,.45); }
+  button { margin: 28px 0 8px; padding: 14px 34px; border: 0; border-radius: 999px;
+           font-size: 17px; font-weight: 600; color: #fff; cursor: pointer;
+           background: linear-gradient(135deg, #8b5cf6, #d946ef); }
+  ol { max-width: 600px; line-height: 1.8; opacity: .92; }
+  code { background: rgba(255,255,255,.1); padding: 2px 8px; border-radius: 6px; }
+</style>
+</head>
+<body>
+  <h1>Renewly App Icon</h1>
+  <p class="sub">Designed for Renewly &mdash; aurora gradient + renew mark.<br>Click below to render the 1024&times;1024 PNG, then drag it into Xcode.</p>
+  <svg id="icon" class="preview" width="1024" height="1024" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#20094e"/>
+        <stop offset=".45" stop-color="#6d1b8f"/>
+        <stop offset=".75" stop-color="#c81d8f"/>
+        <stop offset="1" stop-color="#f02a9c"/>
+      </linearGradient>
+      <radialGradient id="sheen" cx=".25" cy=".1" r=".6">
+        <stop offset="0" stop-color="#ffffff" stop-opacity=".22"/>
+        <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+      </radialGradient>
+      <filter id="glow" x="-60%" y="-60%" width="220%" height="220%">
+        <feGaussianBlur stdDeviation="22"/>
+      </filter>
+    </defs>
+    <rect width="1024" height="1024" fill="url(#bg)"/>
+    <rect width="1024" height="1024" fill="url(#sheen)"/>
+    <g fill="none" stroke="#ffffff" stroke-width="110" stroke-linecap="round">
+      <g filter="url(#glow)" opacity=".55">
+        <path d="M 747.6 402.1 A 260 260 0 1 0 695.8 695.8"/>
+      </g>
+      <path d="M 747.6 402.1 A 260 260 0 1 0 695.8 695.8"/>
+    </g>
+    <g fill="#ffffff" stroke="#ffffff" stroke-width="24" stroke-linejoin="round">
+      <g filter="url(#glow)" opacity=".55">
+        <polygon points="794.8,596.8 717,816 575.6,674.6"/>
+      </g>
+      <polygon points="794.8,596.8 717,816 575.6,674.6"/>
+    </g>
+  </svg>
+  <br>
+  <button id="dl">Download AppIcon-1024.png</button>
+  <ol>
+    <li>Click the download button &mdash; it renders a true <code>1024&times;1024</code> PNG and saves it to Downloads.</li>
+    <li>In Xcode, drag that PNG onto the <b>AppIcon</b> well in <code>Assets.xcassets</code><br>
+        (or drop it into <code>Renewly/Assets.xcassets/AppIcon.appiconset/</code> in Finder).</li>
+    <li>Rebuild &mdash; both warnings disappear and the new icon shows on the home screen.</li>
+  </ol>
+<script>
+document.getElementById('dl').onclick = async () => {
+  const btn = document.getElementById('dl');
+  btn.textContent = 'Rendering\u2026';
+  try {
+    const svg = document.getElementById('icon');
+    const xml = new XMLSerializer().serializeToString(svg);
+    const url = URL.createObjectURL(new Blob([xml], {type:'image/svg+xml;charset=utf-8'}));
+    const img = new Image();
+    await new Promise((res, rej) => { img.onload = res; img.onerror = rej; img.src = url; });
+    const c = document.createElement('canvas'); c.width = c.height = 1024;
+    c.getContext('2d').drawImage(img, 0, 0, 1024, 1024);
+    URL.revokeObjectURL(url);
+    const blob = await new Promise(res => c.toBlob(res, 'image/png'));
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'AppIcon-1024.png';
+    document.body.appendChild(a); a.click(); a.remove();
+    btn.textContent = 'Download AppIcon-1024.png';
+  } catch (e) {
+    btn.textContent = 'Render failed \u2014 try Chrome';
+  }
+};
+</script>
+</body>
+</html>
