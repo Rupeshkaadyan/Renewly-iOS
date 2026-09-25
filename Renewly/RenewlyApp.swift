@@ -4,6 +4,7 @@ import SwiftData
 @main
 struct RenewlyApp: App {
     @AppStorage("hasOnboarded") private var hasOnboarded = false
+    @AppStorage("countryCode") private var countryCode = Country.india.rawValue
 
     init() {
         // In-app language override (Settings → Language). Apple reads
@@ -11,6 +12,26 @@ struct RenewlyApp: App {
         if let code = UserDefaults.standard.string(forKey: "appLanguage"), !code.isEmpty {
             UserDefaults.standard.set([code], forKey: "AppleLanguages")
         }
+        applyLaunchArguments()
+    }
+
+    /// Debug-only launch argument hooks (stripped from release builds).
+    /// Lets the screenshot harness switch tabs / country / onboarding
+    /// without driving the UI with taps.
+    private func applyLaunchArguments() {
+        #if DEBUG
+        let args = CommandLine.arguments
+        if let i = args.firstIndex(of: "-country"),
+           i + 1 < args.count {
+            UserDefaults.standard.set(args[i + 1], forKey: "countryCode")
+        }
+        if args.contains("-skipOnboarding") {
+            UserDefaults.standard.set(true, forKey: "hasOnboarded")
+        }
+        if args.contains("-resetOnboarding") {
+            UserDefaults.standard.set(false, forKey: "hasOnboarded")
+        }
+        #endif
     }
 
     var body: some Scene {
